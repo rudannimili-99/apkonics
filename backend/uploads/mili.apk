@@ -1,0 +1,173 @@
+rudanimili1118_db_user
+MiliRudani1234
+mongodb+srv://rudanimili1118_db_user:MiliRudani1234@cluster0.vweh5lh.mongodb.net/?appName=Cluster0
+AIzaSyDkcDKr0__oeGmR0aJ0z4WfLrasPNW1WVc
+
+from flask import Flask, render_template, request
+from pymongo import MongoClient
+
+app = Flask(__name__, template_folder="templates")
+
+# MongoDB
+MONGO_URI = "mongodb+srv://rudanimili1118_db_user:MiliRudani1234@cluster0.vweh5lh.mongodb.net/?appName=Cluster0"
+client = MongoClient(MONGO_URI)
+db = client["apkonic"]
+users = db["users"]
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/register", methods=["POST"])
+def register():
+    name = request.form.get("name")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    users.insert_one({
+        "name": name,
+        "email": email,
+        "password": password
+    })
+
+    return render_template("index.html", message="User registered successfully")
+
+if __name__ == "__main__":
+    app.run(debug=True, port=10000)
+
+
+
+function scanSMS() {
+    const sms = document.getElementById("smsBox").value;
+
+    fetch("https://apkonic-fdyt.onrender.com/scan-sms", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            content: sms
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const result = document.getElementById("resultText");
+
+        if (data.result === "fake") {
+            result.innerHTML = "⚠️ Fake / Phishing SMS Detected";
+            result.style.color = "red";
+        } else {
+            result.innerHTML = "✅ SMS is Safe";
+            result.style.color = "green";
+        }
+    })
+    .catch(error => {
+        alert("Backend connection failed");
+        console.log(error);
+    });
+}
+
+
+app = Flask(__name__)
+@app.route("/check_sms", methods=["POST"])
+def check_sms():
+    sms = request.json["sms"]
+
+    prompt = f"""p
+    Classify this SMS as SAFE or SMISHING.
+    Respond with only one word.
+
+    SMS: {sms}
+    """
+
+    response = model.generate_content(prompt)
+
+    return jsonify({"result": response.text})
+
+from flask import Flask, request, jsonify, render_template
+import google.generativeai as genai
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+app = Flask(__name__)
+
+# Configure Gemini
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/check_sms", methods=["POST"])
+def check_sms():
+    sms = request.json["sms"]
+
+    prompt = f"""
+Classify this SMS as SAFE or SMISHING.
+Respond with only one word.
+
+SMS: {sms}
+"""
+
+    response = model.generate_content(prompt)
+
+    return jsonify({"result": response.text})
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>APK & SMS Phishing Detector</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <h2>SecureScan</h2>
+    <ul>
+        <li>Home</li>
+        <li>Scan APK</li>
+        <li>SMS Check</li>
+        <li>About</li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Detect Fake APK & Phishing SMS</h1>
+    <p>AI-based system to protect you from fraud and malware</p>
+    <button>Scan Now</button>
+</section>
+
+<!-- Scan Section -->
+<section class="scan">
+    <h2>Scan APK File</h2>
+    <input type="file">
+    <button>Check APK</button>
+
+    <h2>Paste SMS / URL</h2>
+    <textarea id="sms" placeholder="Paste SMS here..."></textarea><br><br>
+    <button onclick="scanSMS()">Scan Message</button>
+    <p id="smsResult"></p>
+
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 SecureScan | College Project</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
