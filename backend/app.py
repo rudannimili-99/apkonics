@@ -29,7 +29,7 @@ def contact():
 
         sender_email = "apkonic.support@gmail.com"   # <-- apna gmail
         receiver_email = "apkonic.support@gmail.com" # <-- same ya alag
-        password = "YOUR_APP_PASSWORD"               # <-- jo mila hai
+        password = "pown itol beod wibr"               # <-- jo mila hai
 
         msg = MIMEMultipart()
         msg["From"] = sender_email
@@ -51,12 +51,11 @@ def contact():
             server.login(sender_email, password)
             server.send_message(msg)
             server.quit()
-
-            return render_template("contact.html", success=True)
-
+            print("Email sent successfully!")
         except Exception as e:
-            return f"Error: {str(e)}"
-
+            print("Error:",str(e))
+            return f"error:{str(e)}"
+        
     return render_template("contact.html")
     
 UPLOAD_FOLDER = "uploads"
