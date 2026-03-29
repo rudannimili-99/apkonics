@@ -1,125 +1,98 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
 from flask import Flask, request, jsonify, render_template
 import os
-print(os.listdir("templates"))
-app = Flask(__name__,template_folder="templates",static_folder="static",static_url_path="/static")
+import re
+from pymongo import MongoClient
+from datetime import datetime
 
+app = Flask(__name__, template_folder="templates", static_folder="static")
+# MongoDB Atlas connection
+client = MongoClient("mongodb+srv://rudanimili1118_db_user:MiliRudani1234@cluster0.vweh5lh.mongodb.net/?appName=Cluster0&authSource=admin&replicaSet=atlas-13l7j8-shard-0&w=majority")
+db = client["apkonic"]
+collection = db["logs"]
+
+# Upload folder
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ================= HOME =================
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+# ================= SCAN PAGE =================
 @app.route("/scan")
 def scan():
     return render_template("scan.html")
+
+
+# ================= FEATURES =================
 @app.route("/features")
 def features():
     return render_template("features.html")
+
+
+# ================= ABOUT =================
 @app.route("/aboutus")
 def aboutus():
     return render_template("aboutus.html")
+
+
+# ================= CONTACT =================
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
+        print("FORM RECEIVED:", request.form)
+
         name = request.form.get("name")
         email = request.form.get("email")
         subject = request.form.get("subject")
         message = request.form.get("message")
 
-        sender_email = "apkonic.support@gmail.com"   # <-- apna gmail
-        receiver_email = "apkonic.support@gmail.com" # <-- same ya alag
-        password = "pown itol beod wibr"               # <-- jo mila hai
-
-        msg = MIMEMultipart()
-        msg["From"] = sender_email
-        msg["To"] = receiver_email
-        msg["Subject"] = subject if subject else "New Message"
-
-        body = f"""
-        Name: {name}
-        Email: {email}
-        Subject: {subject}
-        Message: {message}
-        """
-
-        msg.attach(MIMEText(body, "plain"))
-
         try:
-            server = smtplib.SMTP("smtp.gmail.com", 587)
-            server.starttls()
-            server.login(sender_email, password)
-            server.send_message(msg)
-            server.quit()
-            print("Email sent successfully!")
+            
+            with open("message.txt", "a", encoding="utf-8") as f:
+              f.write("----- NEW MESSAGE -----\n")
+              f.write(f"Name: {name}\n")
+              f.write(f"Email: {email}\n")
+              f.write(f"Subject: {subject}\n")
+              f.write(f"Message: {message}\n")
+              f.write("------------------------\n\n")
+            print("Saved message ✔")
         except Exception as e:
-            print("Error:",str(e))
-            return f"error:{str(e)}"
-        
+            print("Error:", e)
+
+        return render_template("contact.html", message="Message received successfully!")
+
     return render_template("contact.html")
-    
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ================= SMS SCAN =================
-import re
-
-@app.route('/scan_sms', methods=['POST'])
+@app.route("/scan_sms", methods=["POST"])
 def scan_sms():
     data = request.get_json()
-    message = data.get('message', '').lower()
+    message = data.get("message", "").lower()
 
     risk_score = 0
     reasons = []
 
-    # 🚨 1. Suspicious Keywords
+    # 1. Suspicious keywords
     keywords = ["win", "lottery", "free", "urgent", "click", "offer", "prize"]
     if any(k in message for k in keywords):
         risk_score += 2
         reasons.append("Suspicious keywords detected")
 
-    # 🚨 2. Fake Links
-    if re.search(r'http[s]?://', message):
+    # 2. External links
+    if re.search(r"http[s]?://", message):
         risk_score += 2
         reasons.append("Contains external link")
 
-    # 🚨 3. Urgency / Pressure
+    # 3. Urgency words
     urgency = ["urgent", "immediately", "act now", "limited time"]
     if any(u in message for u in urgency):
-        risk_score += 2
-        reasons.append("Creates urgency pressure")
-
-    # 🚨 4. OTP / Bank Scam
-    bank_words = ["otp", "bank", "account", "verify", "password"]
-    if any(b in message for b in bank_words):
-        risk_score += 2
-        reasons.append("Sensitive info request (OTP/Bank)")
-
-    # 🚨 5. Suspicious Sender Format
-    if re.search(r'\d{10}', message):
         risk_score += 1
-        reasons.append("Unknown mobile number detected")
+        reasons.append("Creates urgency")
 
-# 🔗 URL Detection
-    urls = re.findall(r'(https?://[^\s]+|www\.[^\s]+)', message)
-
-    if urls:
-        risk_score += 2
-        reasons.append("Contains URL link")
-
-    # Short links
-    short_domains = ["bit.ly", "tinyurl", "goo.gl", "t.co"]
-    if any(domain in message for domain in short_domains):
-        risk_score += 2
-        reasons.append("Uses shortened URL (suspicious)")
-
-    # phishing words with link
-    suspicious_words = ["verify", "login", "update", "secure"]
-    if any(word in message for word in suspicious_words):
-        risk_score += 1
-        reasons.append("URL may lead to phishing page")
-
-    # 🎯 FINAL RESULT
+    # Final result
     if risk_score <= 2:
         result = "Safe Message"
         color = "green"
@@ -129,7 +102,30 @@ def scan_sms():
     else:
         result = "Phishing / Dangerous Message"
         color = "red"
-    
+        with open("activity_logs.txt", "a", encoding="utf-8") as f:
+          f.write(
+            f"""
+        Time   : {datetime.now()}
+        Message: {message}
+        Risk   : {risk_score}
+        Result : {result}
+
+
+      """
+    )
+    try:
+      collection.insert_one({
+        "type": "sms",
+        "message": message,
+        "risk_score": risk_score,
+        "reasons": reasons,
+        "timestamp": datetime.utcnow()
+        })
+      print("MongoDB saved ✔")
+    except Exception as e:
+      print("MongoDB error:", e)
+
+
     return jsonify({
         "result": result,
         "risk_score": risk_score,
@@ -137,10 +133,10 @@ def scan_sms():
         "color": color
     })
 
+
 # ================= SENDER VERIFY =================
 @app.route("/verify_sender", methods=["POST"])
 def verify_sender():
-
     data = request.get_json()
 
     if not data or "sender" not in data:
@@ -149,23 +145,33 @@ def verify_sender():
     sender = data["sender"].upper()
 
     trusted_senders = [
-        "SBIUPI","AXISBK","HDFCBK","ICICIB",
-        "JIOPAY","PAYTMB","GPAY","KOTAKBK",
-        "AMAZON","FLIPKART","ZOMATO","SWIGGY",
-        "UIDAI","IRCTC","AIRINDIA","GOOGLE","APPLE",
+        "SBIUPI", "AXISBK", "HDFCBK", "ICICIB",
+        "JIOPAY", "PAYTMB", "GPAY", "KOTAKBK",
+        "AMAZON", "FLIPKART", "ZOMATO", "SWIGGY",
+        "UIDAI", "IRCTC", "AIRINDIA", "GOOGLE", "APPLE"
     ]
 
     if any(trusted in sender for trusted in trusted_senders):
-        verdict = "✅ Trusted / Likely Legitimate Sender"
+        verdict = "Trusted / Likely Legitimate Sender"
     else:
-        verdict = "⚠️ Unknown or Suspicious Sender"
+        verdict = "Unknown or Suspicious Sender"
+    with open("activity_logs.txt", "a", encoding="utf-8") as f:
+     f.write(
+        f"""
 
+    Time   : {datetime.now()}
+    Sender : {sender}
+    Verdict: {verdict}
+
+
+"""
+    )
     return jsonify({"verdict": verdict})
+
 
 # ================= APK SCAN =================
 @app.route("/scan_apk", methods=["POST"])
 def scan_apk():
-
     if "apk" not in request.files:
         return jsonify({"result": "No file uploaded"})
 
@@ -175,66 +181,38 @@ def scan_apk():
         return jsonify({"result": "No file selected"})
 
     if not file.filename.lower().endswith(".apk"):
-        return jsonify({"result": "❌ Not a valid APK file"})
+        return jsonify({"result": "Not a valid APK file"})
 
     filepath = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(filepath)
 
     filesize = os.path.getsize(filepath)
 
-    risk_score = 0
-    reasons = []
-
-    # 1️⃣ File size analysis
-    if filesize < 50000:
-        risk_score += 2
-        reasons.append("Very small file size")
-
-    if filesize > 200000000:
-        risk_score += 1
-        reasons.append("Unusually large APK")
-
-    # 2️⃣ Suspicious filename check
-    suspicious_names = ["crack", "mod", "hack", "premium", "free", "patched"]
-    for word in suspicious_names:
-        if word in file.filename.lower():
-            risk_score += 2
-            reasons.append(f"Suspicious keyword in filename: {word}")
-
-    # 3️⃣ Basic content keyword scan (fake scan simulation)
-    with open(filepath, "rb") as f:
-        content = f.read().lower()
-
-        suspicious_strings = [
-            b"getdeviceid",
-            b"sendtextmessage",
-            b"http://",
-            b"https://",
-            b"exec",
-            b"root",
-        ]
-
-        for s in suspicious_strings:
-            if s in content:
-                risk_score += 1
-                reasons.append(f"Suspicious code pattern: {s.decode()}")
-
-    # 🔥 Final Decision
-    if risk_score >= 5:
-        result = "🚨 Dangerous APK"
-        color = "red"
-    elif risk_score >= 3:
-        result = "⚠️ Suspicious APK"
-        color = "orange"
-    else:
-        result = "✅ APK Looks Safe"
+    # Simple logic
+    if filesize < 5 * 1024 * 1024:
+        result = "APK Looks Safe"
         color = "green"
+    else:
+        result = "APK Might Be Suspicious"
+        color = "orange"
+    with open("activity_logs.txt", "a", encoding="utf-8") as f:
+     f.write(
+        f"""
+======== APK UPLOAD ========
+    Time : {datetime.now()}
+    File : {file.filename}
+    Size : {filesize} bytes
+============================
 
+"""
+    )
     return jsonify({
         "result": result,
-        "risk_score": risk_score,
-        "reasons": reasons,
+        "size": filesize,
         "color": color
     })
+
+
+# ================= RUN =================
 if __name__ == "__main__":
     app.run(debug=True)
