@@ -1,0 +1,270 @@
+
+    
+-------------------SENDER VERIFY----------------
+    Time   : 2026-03-29 16:57:55.417490
+    Sender : VM-SBIUPI-R
+    Verdict: Trusted / Likely Legitimate Sender
+=================================
+
+
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:00.326993
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:02.568372
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:04.399636
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:04.548014
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:04.714969
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:04.905622
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:30.541666
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:32.855859
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:34.626643
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+ ----------------SMS SCAN----------------       
+        Time   : 2026-03-29 16:58:34.629116
+        Message: hi
+        Risk   : 0
+        Result : Safe Message
+-------------------
+
+      
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:58:34.890724
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:58:35.126588
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:00.606045
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:02.931894
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:04.801399
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:04.807745
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:05.278836
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:05.405228
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:31.151766
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:33.433462
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:34.898526
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:34.903136
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:35.490508
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 16:59:35.650165
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:01.515857
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:03.853979
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:05.153262
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:05.774704
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:06.004385
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:31.948823
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:34.338063
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:35.589534
+File   : python.apk
+Size   : 0 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:35.595969
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:36.571314
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:00:36.587136
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
+
+======== APK UPLOAD ========
+Time   : 2026-03-29 17:01:02.012255
+File   : python.apk
+Size   : 23153 bytes
+Result : APK Looks Safe
+============================
